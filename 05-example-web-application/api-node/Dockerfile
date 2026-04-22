@@ -2,10 +2,16 @@ FROM node:19.6-alpine
 
 WORKDIR /usr/src/app
 
+ENV NODE_ENV production
+
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --only=production
 
-COPY ./src .
+USER node 
 
-CMD ["node", "index.js"]
+COPY --chown=node:node ./src .
+
+EXPOSE 3000
+
+CMD ["node", "index.js"] 
