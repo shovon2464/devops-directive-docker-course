@@ -1,5 +1,9 @@
-FROM ubuntu
+FROM node:19.6-alpine
 
-RUN apt update
+COPY package*.json ./
 
-RUN apt install nodejs -y
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "run", "dev"]
