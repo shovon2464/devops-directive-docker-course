@@ -2,8 +2,12 @@ FROM golang:1.19-alpine
 
 WORKDIR /app
 
-COPY . .
-
+COPY go.mod go.sum .
+ 
 RUN go mod download
 
-CMD ["go", "run", "./main.go"]
+COPY . .
+
+RUN go build -o api-golang
+
+CMD ["./api-golang"]
