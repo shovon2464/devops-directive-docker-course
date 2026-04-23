@@ -1,11 +1,13 @@
 FROM golang:1.19-buster AS build
 
-
 WORKDIR /app
 
-COPY go.mod go.sum .
+COPY go.mod go.sum ./
 
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    go mod download
+
 
 COPY . .
 
@@ -17,6 +19,10 @@ RUN go build \
 
 FROM scratch
 
+ENV GIN_MODE release
+
 COPY --from=build /app/api-golang api-golang
 
-CMD ["./api-golang"]
+EXPOSE 8080
+
+CMD ["/api-golang"]
